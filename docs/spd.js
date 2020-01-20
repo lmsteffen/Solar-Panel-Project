@@ -5,9 +5,16 @@ let innerWidth = outerWidth - margins.left - margins.right
 let innerHeight = outerHeight - margins.top - margins.bottom
 
 
+<<<<<<< HEAD
 let svgHM = d3.select('#heat-map')
   .attr('width', outerWidth)
   .attr('height', outerHeight)
   .append('g')
   .attr('id', 'plot-area')
   .attr('transform', 'translate('+ margins.left + ',' + margins.top ')')
+=======
+let svgD = d3.select('#adhviz')
+
+
+let svgHM = d3.select('# heat-map')
+>>>>>>> f313e3008723e97b7aff6500484e72b3c978807f
