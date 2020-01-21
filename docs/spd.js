@@ -25,18 +25,28 @@ let adhInner = adhOuter
   .attr("height", innerHeight)
   .attr("transform", "translate(" + margins.left + "," + margins.right + ")");
 
-  lmsOuter //border
-    .append("rect")
-    .attr("width", outerWidth)
-    .attr("height", outerHeight)
-    .attr("fill", "transparent")
-    .attr("stroke", "#333333")
-    .attr("stroke-width", 2);
+ d3.csv('ordered-data.csv').then(draw)
+
+lmsOuter //border
+  .append("rect")
+  .attr("width", outerWidth)
+  .attr("height", outerHeight)
+  .attr("fill", "transparent")
+  .attr("stroke", "#333333")
+  .attr("stroke-width", 2);
+
+function timeclean(time) {
+  hr = +time.slice(0,2)
+  min = +time.slice(3,5)
+  return 60*hr + min
+}
 
   d3.csv('ordered-data.csv').then(draw)
   d3.csv('heatmap-data.csv').then(draw)
 
   function draw(solar) {
+
+    
 
     lmsInner.append('circle')
     .attr('cx', 200)
@@ -44,7 +54,7 @@ let adhInner = adhOuter
     .attr('r', 20)
     .attr('fill', 'red')
 
-    console.log(solar)
+    //console.log(solar)
 
     adhOuter //border
       .append("rect")
@@ -62,16 +72,16 @@ let adhInner = adhOuter
       .attr("stroke", "#333333")
       .attr("stroke-width", 3);
 
-    /*let wattscale = d3
+    let wattscale = d3
       .scaleLinear() // Lauren, this might be useful for you as well
-      .domain( d3.extent() )
+      .domain( [Math.min(...solar.map(d => d.W)), Math.max(...solar.map(d => d.W))] )
       .range([0, innerWidth]);
 
-    let timescale = d3
+    let timescale = d3 //make sure you use timeclean()
       .scaleLinear()
-      .domain( fill this in later, find out how to make use of timescale )
-      .range([0, innerHeight]) */
+      .domain( [0000, 1439] )
+      .range([0, innerHeight])
 
-
-
+    
+    console.log(timescale(timeclean('12:30')))
   }
