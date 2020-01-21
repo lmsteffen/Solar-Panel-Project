@@ -90,6 +90,11 @@ function timeclean(time) { //takes "HH:MM" as input and outputs total minutes
       .domain( [0000, 1439] )
       .range([0, innerWidth])
 
+    let colorScale = d3
+      .scaleSequential()
+      .interpolator(d3.interpolateViridis)
+      .domain([0, 6012])
+
 
     adhInner //drawing
       .selectAll('circle')
