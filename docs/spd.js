@@ -1,4 +1,4 @@
-let margins = { top: 30, bottom: 30, left: 30, right: 30 };
+let margins = { top: 30, bottom: 30, left: 38, right: 30 };
 let outerWidth = 800;
 let outerHeight = 450;
 let innerWidth = outerWidth - margins.left - margins.right;
@@ -53,6 +53,8 @@ function timeclean(time) { //takes "HH:MM" as input and outputs total minutes
     myData = data
     myMW = d3.rollups(myData, v => d3.mean(v, v => v.W), d => d.Month, d => d.Hour)
   }
+
+  
   
   function draw(solar) {    
 
@@ -80,15 +82,18 @@ function timeclean(time) { //takes "HH:MM" as input and outputs total minutes
       .attr("stroke", "#333333")
       .attr("stroke-width", 3);
 
-    let wattscale = d3
+    let wattScale = d3
       .scaleLinear() // Lauren, this might be useful for you as well
       .domain( [Math.min(...solar.map(d => d.W)), Math.max(...solar.map(d => d.W))] )
       .range([innerHeight, 0]);
+    let wattAxis = d3.axisLeft(wattScale)
 
-    let timescale = d3 //make sure you use timeclean()
+
+    let timeScale = d3 //make sure you use timeclean()
       .scaleLinear()
       .domain( [0000, 1439] )
       .range([0, innerWidth])
+    let timeAxis = d3.axisBottom(timeScale)
 
     let colorScale = d3
       .scaleSequential()
@@ -101,11 +106,32 @@ function timeclean(time) { //takes "HH:MM" as input and outputs total minutes
       .data(solar)
       .enter()
       .append('circle')
-      .attr('cx', d => timescale(timeclean(d.Time)))
-      .attr('cy', d => wattscale(d.W))
+      .attr('cx', d => timeScale(timeclean(d.Time)))
+      .attr('cy', d => wattScale(d.W))
       .style('fill', 'red')
       .attr('r', .5)
+      .append('line')
+      .style('stroke', 'green')
+      /*.attr('x1', (d, i) => timeScale(timeclean(d.Time)))
+      .attr('x2', (d, i) => timeScale(timeclean(d.Time))) //find out how to make this a different data point
+      .attr('y1', (d, i) => wattScale(d.W))
+      .attr('y2', (d, i) => wattScale(d.W))*/ //this too 
 
+  adhInner //creates x axis
+    .append('g')
+    .attr('transform', 'translate(' + 0 + ', ' + innerHeight + ')')
+    .attr('class', 'x axis') 
+    .call(timeAxis)
+  
+  adhInner //creates y axis
+    .append('g')
+    .attr('class', 'y axis')
+    .call(wattAxis)
+
+
+      
+
+    
     
 
   }
