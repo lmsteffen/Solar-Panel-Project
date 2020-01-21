@@ -25,14 +25,8 @@ let adhInner = adhOuter
   .attr("height", innerHeight)
   .attr("transform", "translate(" + margins.left + "," + margins.right + ")");
 
-adhOuter //border
-  .append("rect")
-  .attr("width", outerWidth)
-  .attr("height", outerHeight)
-  .attr("fill", "transparent")
-  .attr("stroke", "#333333")
-  .attr("stroke-width", 2);
 
+<<<<<<< HEAD
   lmsOuter //border
     .append("rect")
     .attr("width", outerWidth)
@@ -47,19 +41,46 @@ adhOuter //border
   .scaleLinear() // Lauren, this might be useful for you as well
   .domain( fill this in )
   .range([0, innerWidth]);
+=======
+>>>>>>> 9be6c68d91aac0618a549e8fd722ff8f62ed82a5
 
-let timescale = d3
-  .scaleLinear()
-  .domain( fill this in later, find out how to make use of timescale )
-  .range([0, innerHeight]) */
+
 
   d3.csv('ordered-data.csv').then(draw)
 
+<<<<<<< HEAD
   function draw() {
     lmsInner.append('circle')
+=======
+  function draw(solar) {
+
+    svgHM.append('circle')
+>>>>>>> 9be6c68d91aac0618a549e8fd722ff8f62ed82a5
     .attr('cx', 200)
     .attr('cy', 200)
     .attr('r', 20)
     .attr('fill', 'red')
     console.log('it worked')
+
+
+    adhOuter //border
+      .append("rect")
+      .attr("width", outerWidth)
+      .attr("height", outerHeight)
+      .attr("fill", "transparent")
+      .attr("stroke", "#333333")
+      .attr("stroke-width", 3);
+
+    /*let wattscale = d3
+      .scaleLinear() // Lauren, this might be useful for you as well
+      .domain( d3.extent() )
+      .range([0, innerWidth]);
+
+    let timescale = d3
+      .scaleLinear()
+      .domain( fill this in later, find out how to make use of timescale )
+      .range([0, innerHeight]) */
+
+
+
   }
