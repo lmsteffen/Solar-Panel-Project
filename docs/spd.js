@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 let margins = {top: 30, bottom: 30, left: 30, right: 30}
 let outerWidth = 800
 let outerHeight = 450
@@ -16,7 +16,7 @@ let svgHM = d3.select('#heat-map')
   d3.csv('ordered-data.csv').then(drawHM)
 
   function drawHM() {
-=======
+
 let margins = { top: 30, bottom: 30, left: 30, right: 30 };
 let outerWidth = 800;
 let outerHeight = 450;
