@@ -26,7 +26,6 @@ let adhInner = adhOuter
   .attr("transform", "translate(" + margins.left + "," + margins.right + ")");
 
 
-<<<<<<< HEAD
   lmsOuter //border
     .append("rect")
     .attr("width", outerWidth)
@@ -40,22 +39,15 @@ let adhInner = adhOuter
 /*let wattscale = d3
   .scaleLinear() // Lauren, this might be useful for you as well
   .domain( fill this in )
-  .range([0, innerWidth]);
-=======
->>>>>>> 9be6c68d91aac0618a549e8fd722ff8f62ed82a5
+  .range([0, innerWidth]);*/
 
 
 
   d3.csv('ordered-data.csv').then(draw)
 
-<<<<<<< HEAD
-  function draw() {
-    lmsInner.append('circle')
-=======
   function draw(solar) {
 
     svgHM.append('circle')
->>>>>>> 9be6c68d91aac0618a549e8fd722ff8f62ed82a5
     .attr('cx', 200)
     .attr('cy', 200)
     .attr('r', 20)
