@@ -25,8 +25,6 @@ let adhInner = adhOuter
   .attr("height", innerHeight)
   .attr("transform", "translate(" + margins.left + "," + margins.right + ")");
 
- d3.csv('ordered-data.csv').then(draw)
-
   lmsOuter //border
     .append("rect")
     .attr("width", outerWidth)
@@ -35,10 +33,8 @@ let adhInner = adhOuter
     .attr("stroke", "#333333")
     .attr("stroke-width", 2);
 
-
-
-
   d3.csv('ordered-data.csv').then(draw)
+  d3.csv('heatmap-data.csv').then(draw)
 
   function draw(solar) {
 
