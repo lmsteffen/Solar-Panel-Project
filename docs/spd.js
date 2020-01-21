@@ -77,5 +77,5 @@ let adhInner = adhOuter
       .range([0, innerHeight]) */
 
 
-
+    console.log(d3.extent(solar.map(d => d.mpg))))
   }
