@@ -5,17 +5,23 @@ let innerWidth = outerWidth - margins.left - margins.right
 let innerHeight = outerHeight - margins.top - margins.bottom
 
 
-let svgHM = d3.select('div.lms #heat-map')
+let svgHM = d3.select('#heat-map')
   .attr('width', outerWidth)
   .attr('height', outerHeight)
-  .style('background-color', 'white')
-  // .append('g')
-  // .attr('id', 'plot-area')
-  // .attr('transform', 'translate('+ margins.left + ',' + margins.top ')')
+  // .style('background-color', 'black')
+  // .append('rect')
+  // .attr('x', 0)
+  // .attr('y', 0)
+  // .attr('width', outerWidth)
+  // .attr('height', outerHeight)
+  // .attr('stroke', 'red')
+  .append('g')
+  .attr('id', 'plot-area')
+  .attr('transform', 'translate( ' + margins.left + ',' + margins.top + ')')
 
-  d3.csv('ordered-data.csv').then(draw)
+  d3.csv('ordered-data.csv').then(drawHM)
 
-  function draw() {
+  function drawHM() {
     svgHM.append('circle')
     .attr('cx', 200)
     .attr('cy', 200)
