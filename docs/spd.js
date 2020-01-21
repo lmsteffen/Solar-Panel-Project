@@ -35,7 +35,7 @@ lmsOuter //border
   .attr("stroke", "#333333")
   .attr("stroke-width", 2);
 
-function timeclean(time) {
+function timeclean(time) { //takes "HH:MM" as input and outputs total minutes
   hr = +time.slice(0,2)
   min = +time.slice(3,5)
   return 60*hr + min
@@ -75,13 +75,24 @@ function timeclean(time) {
     let wattscale = d3
       .scaleLinear() // Lauren, this might be useful for you as well
       .domain( [Math.min(...solar.map(d => d.W)), Math.max(...solar.map(d => d.W))] )
-      .range([0, innerWidth]);
+      .range([innerHeight, 0]);
 
     let timescale = d3 //make sure you use timeclean()
       .scaleLinear()
       .domain( [0000, 1439] )
-      .range([0, innerHeight])
+      .range([0, innerWidth])
+
+
+    adhInner //drawing
+      .selectAll('circle')
+      .data(solar)
+      .enter()
+      .append('circle')
+      .attr('cx', d => timescale(timeclean(d.Time)))
+      .attr('cy', d => wattscale(d.W))
+      .style('fill', 'red')
+      .attr('r', .5)
 
     
-    console.log(timescale(timeclean('12:30')))
+
   }
