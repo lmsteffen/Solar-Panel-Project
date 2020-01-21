@@ -4,6 +4,9 @@ let outerHeight = 450;
 let innerWidth = outerWidth - margins.left - margins.right;
 let innerHeight = outerHeight - margins.top - margins.bottom;
 
+let myData = []
+let myMW = []
+
 let lmsOuter = d3
   .select("#heat-map")
   .attr("width", outerWidth)
@@ -35,6 +38,8 @@ lmsOuter //border
   .attr("stroke", "#333333")
   .attr("stroke-width", 2);
 
+  
+
 function timeclean(time) { //takes "HH:MM" as input and outputs total minutes
   hr = +time.slice(0,2)
   min = +time.slice(3,5)
@@ -42,11 +47,14 @@ function timeclean(time) { //takes "HH:MM" as input and outputs total minutes
 }
 
   d3.csv('ordered-data.csv').then(draw)
-  d3.csv('heatmap-data.csv').then(draw)
+  d3.csv('heatmap-data.csv').then(wrangle)
 
-  function draw(solar) {
-
-    
+  function wrangle(data) {
+    myData = data
+    myMW = d3.rollups(myData, v => d3.mean(v, v => v.W), d => d.Month, d => d.Hour)
+  }
+  
+  function draw(solar) {    
 
     lmsInner.append('circle')
     .attr('cx', 200)
