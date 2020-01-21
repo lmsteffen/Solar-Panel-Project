@@ -1,4 +1,4 @@
-let margins = { top: 30, bottom: 30, left: 38, right: 30 };
+let margins = { top: 45, bottom: 45, left: 60, right: 45 };
 let outerWidth = 800;
 let outerHeight = 450;
 let innerWidth = outerWidth - margins.left - margins.right;
@@ -128,10 +128,27 @@ function timeclean(time) { //takes "HH:MM" as input and outputs total minutes
     .attr('class', 'y axis')
     .call(wattAxis)
 
+  adhOuter //X axis label
+    .append('text')
+    .attr('class', 'x axis')
+    .attr('x', margins.left + innerWidth / 2)
+    .attr('y', outerHeight - margins.bottom / 4)
+    .attr('text-anchor', 'middle')
+    .text('Time of Day')
+    .attr('fill', '#AAAAAA')
 
-      
-
-    
+  adhOuter //Y axis Label
+    .append('text')
+    .attr('class', 'y axis')
+    .attr('x', margins.left / 2)
+    .attr('y', margins.bottom + innerHeight / 2.18)
+    .attr('text-anchor', 'middle')
+    .attr(
+      'transform',
+      `rotate(-90 ${margins.left / 2} ${margins.bottom + innerHeight / 2})`
+    )
+    .text('Watt-hours produced')
+    .attr('fill', '#AAAAAA')
     
 
   }
