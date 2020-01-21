@@ -4,10 +4,12 @@ let outerHeight = 450;
 let innerWidth = outerWidth - margins.left - margins.right;
 let innerHeight = outerHeight - margins.top - margins.bottom;
 
-let svgHM = d3
+let lmsOuter = d3
   .select("#heat-map")
   .attr("width", outerWidth)
   .attr("height", outerHeight)
+
+let lmsInner = lmsOuter
   .append("g")
   .attr("id", "plot-area")
   .attr("transform", "translate(" + margins.left + "," + margins.right + ")")
@@ -31,6 +33,16 @@ adhOuter //border
   .attr("stroke", "#333333")
   .attr("stroke-width", 2);
 
+  lmsOuter //border
+    .append("rect")
+    .attr("width", outerWidth)
+    .attr("height", outerHeight)
+    .attr("fill", "transparent")
+    .attr("stroke", "#333333")
+    .attr("stroke-width", 2);
+
+
+
 /*let wattscale = d3
   .scaleLinear() // Lauren, this might be useful for you as well
   .domain( fill this in )
@@ -44,7 +56,7 @@ let timescale = d3
   d3.csv('ordered-data.csv').then(draw)
 
   function draw() {
-    svgHM.append('circle')
+    lmsInner.append('circle')
     .attr('cx', 200)
     .attr('cy', 200)
     .attr('r', 20)
