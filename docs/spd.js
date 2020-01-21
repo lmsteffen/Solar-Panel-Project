@@ -1,25 +1,3 @@
-<<<<<<< HEAD
-=======
-
-let margins = {top: 30, bottom: 30, left: 30, right: 30}
-let outerWidth = 800
-let outerHeight = 450
-let innerWidth = outerWidth - margins.left - margins.right
-let innerHeight = outerHeight - margins.top - margins.bottom
-
-
-let svgHM = d3.select('#heat-map')
-  .attr('width', outerWidth)
-  .attr('height', outerHeight)
-  .append('g')
-  .attr('id', 'plot-area')
-  .attr('transform', 'translate( ' + margins.left + ',' + margins.top + ')')
-
-  d3.csv('ordered-data.csv').then(drawHM)
-
-  function drawHM() {
-
->>>>>>> 8293ae4023f46537b9fdc5770785d482129da5d0
 let margins = { top: 30, bottom: 30, left: 30, right: 30 };
 let outerWidth = 800;
 let outerHeight = 450;
@@ -31,8 +9,8 @@ let svgHM = d3
   .attr("width", outerWidth)
   .attr("height", outerHeight)
   .append("g")
-  .attr("id", "plot-area");
-  .attr('transform', 'translate('+ margins.left + ',' + margins.top + ')') //this line seems to be causing problems -adh
+  .attr("id", "plot-area")
+  .attr("transform", "translate(" + margins.left + "," + margins.right + ")")
 
 let adhOuter = d3
   .select("#adhviz")
