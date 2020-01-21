@@ -42,13 +42,12 @@ let adhInner = adhOuter
 
   function draw(solar) {
 
-    svgHM.append('circle')
+    lmsInner.append('circle')
     .attr('cx', 200)
     .attr('cy', 200)
     .attr('r', 20)
     .attr('fill', 'red')
 
-    console.log('it worked')
     console.log(solar)
 
     adhOuter //border
