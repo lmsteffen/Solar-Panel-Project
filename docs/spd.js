@@ -40,3 +40,13 @@ let timescale = d3
   .scaleLinear()
   .domain( fill this in later, find out how to make use of timescale )
   .range([0, innerHeight]) */
+
+  d3.csv('ordered-data.csv').then(draw)
+
+  function draw() {
+    svgHM.append('circle')
+    .attr('cx', 200)
+    .attr('cy', 200)
+    .attr('r', 20)
+    .attr('fill', 'red')
+  }
