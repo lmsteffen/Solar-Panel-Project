@@ -49,4 +49,5 @@ let timescale = d3
     .attr('cy', 200)
     .attr('r', 20)
     .attr('fill', 'red')
+    console.log('it worked')
   }
