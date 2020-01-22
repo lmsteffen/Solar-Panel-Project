@@ -4,13 +4,18 @@ let outerHeight = 450;
 let innerWidth = outerWidth - margins.left - margins.right;
 let innerHeight = outerHeight - margins.top - margins.bottom;
 
+let outerWidthHM = 700;
+let outerHeightHM = 700;
+let innerWidthHM = outerWidthHM - margins.left - margins.right;
+let innerHeightHM = outerHeightHM - margins.top - margins.bottom;
+
 let lmsData = []
 let hmData = []
 
 let lmsOuter = d3
   .select("#heat-map")
-  .attr("width", outerWidth)
-  .attr("height", outerHeight)
+  .attr("width", outerWidthHM)
+  .attr("height", outerHeightHM)
 
 let lmsInner = lmsOuter
   .append("g")
@@ -118,8 +123,8 @@ function drawHM(data) {
 
   lmsOuter //border
     .append("rect")
-    .attr("width", outerWidth)
-    .attr("height", outerHeight)
+    .attr("width", outerWidthHM)
+    .attr("height", outerHeightHM)
     .attr("fill", "transparent")
     .attr("stroke", "#333333")
     .attr("stroke-width", 3);
@@ -133,18 +138,18 @@ function drawHM(data) {
     .scaleBand()
     .domain([04, 12])  // hmData?
     // .domain(['Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'])
-    .range([0, innerWidth])
+    .range([0, innerWidthHM])
   let monthAxis = d3.axisBottom(monthScale)
 
   let hourScale = d3
     .scaleBand()
     .domain([00, 23])
-    .range([innerHeight, 0])
+    .range([innerHeightHM, 0])
   let hourAxis = d3.axisLeft(hourScale)
 
   lmsInner  // x axis for heat map
     .append('g')
-    .attr('transform', 'translate(' + 0 + ',' + innerHeight + ')')
+    .attr('transform', 'translate(' + 0 + ',' + innerHeightHM + ')')
     .attr('class', 'x axis')
     .call(monthAxis)
 
