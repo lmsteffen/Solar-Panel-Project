@@ -124,7 +124,7 @@ function draw(solar) {
 
   let pointsList = []
 
-  for (let i =0; i < solar.length; i++) { //creates list of points to plot with line
+  for (let i = 0; i < solar.length; i++) { //creates list of points to plot with line
     pointsList.push([timeScale(timeClean(solar[i]['Time'])), wattScale(solar[i]['W'])])
     }
 
@@ -139,7 +139,7 @@ function draw(solar) {
     .attr('fill', 'transparent')
     .attr('opacity', .9)
 
-
+   
 
 }
 
