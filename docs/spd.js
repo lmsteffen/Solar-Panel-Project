@@ -43,7 +43,7 @@ lmsOuter //border
 function timeclean(time) { //takes "HH:MM" as input and outputs total minutes
   hr = +time.slice(0,2)
   min = +time.slice(3,5)
-  return 60*hr + min
+  return hr + min/60
 }
 
   d3.csv('ordered-data.csv').then(draw)
@@ -91,9 +91,14 @@ function timeclean(time) { //takes "HH:MM" as input and outputs total minutes
 
     let timeScale = d3 //make sure you use timeclean()
       .scaleLinear()
-      .domain( [0000, 1439] )
+      .domain( [0000, 24] )
       .range([0, innerWidth])
-    let timeAxis = d3.axisBottom(timeScale)
+    let timeAxis = d3.axisBottom(timeScale).ticks()//.tickValues()
+
+    /*let testTimeScale = d3
+      scaleTime
+      .domain([])
+      .range([])*/
 
     let colorScale = d3
       .scaleSequential()
@@ -107,9 +112,15 @@ function timeclean(time) { //takes "HH:MM" as input and outputs total minutes
       .enter()
       .append('circle')
       .attr('cx', d => timeScale(timeclean(d.Time)))
+      //.attr('cx', d => testTimeScale(d.Time))
       .attr('cy', d => wattScale(d.W))
       .style('fill', 'red')
       .attr('r', .5)
+
+    adhInner
+      .selectAll('line')
+      .data(solar)
+      .enter()
       .append('line')
       .style('stroke', 'green')
       /*.attr('x1', (d, i) => timeScale(timeclean(d.Time)))
@@ -134,7 +145,7 @@ function timeclean(time) { //takes "HH:MM" as input and outputs total minutes
     .attr('x', margins.left + innerWidth / 2)
     .attr('y', outerHeight - margins.bottom / 4)
     .attr('text-anchor', 'middle')
-    .text('Time of Day')
+    .text('Time of Day (in hours)')
     .attr('fill', '#AAAAAA')
 
   adhOuter //Y axis Label
