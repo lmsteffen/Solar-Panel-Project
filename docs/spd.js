@@ -29,7 +29,7 @@ let adhInner = adhOuter
   .attr("transform", "translate(" + margins.left + "," + margins.right + ")");
   
 
-function timeclean(time) { //takes "HH:MM" as input and outputs total minutes
+function timeClean(time) { //takes "HH:MM" as input and outputs total minutes
   hr = +time.slice(0,2)
   min = +time.slice(3,5)
   return hr + min/60
@@ -62,40 +62,31 @@ function wrangle(data) {
     
 
     let wattScale = d3
-      .scaleLinear() // Lauren, this might be useful for you as well
+      .scaleLinear() 
       .domain( [Math.min(...solar.map(d => d.W)), Math.max(...solar.map(d => d.W))] )
       .range([innerHeight, 0]);
     let wattAxis = d3.axisLeft(wattScale)
 
 
-    let timeScale = d3 //make sure you use timeclean()
+    let timeScale = d3 //make sure you use timeClean()
       .scaleLinear()
       .domain( [0000, 24] )
       .range([0, innerWidth])
     let timeAxis = d3.axisBottom(timeScale).ticks()//.tickValues()
 
-    adhInner //points
+    /* adhInner //points
       .selectAll('circle')
       .data(solar)
       .enter()
       .append('circle')
-      .attr('cx', d => timeScale(timeclean(d.Time)))
+      .attr('cx', d => timeScale(timeClean(d.Time)))
       //.attr('cx', d => testTimeScale(d.Time))
       .attr('cy', d => wattScale(d.W))
       .style('fill', 'red')
-      .attr('r', .5)
+      .attr('r', .5) */
 
     
-    adhInner //lines?
-      .selectAll('line')
-      .data(solar)
-      .enter()
-      .append('line')
-      .style('stroke', 'green')
-      /*.attr('x1', (d, i) => timeScale(timeclean(d.Time)))
-      .attr('x2', (d, i) => timeScale(timeclean(d.Time))) //find out how to make this a different data point
-      .attr('y1', (d, i) => wattScale(d.W))
-      .attr('y2', (d, i) => wattScale(d.W))*/ //this too 
+    //console.log(timeScale(timeClean(solar[8]['Time']))) //for testing
 
   adhInner //creates x axis
     .append('g')
@@ -129,6 +120,30 @@ function wrangle(data) {
     )
     .text('Watt-hours')
     .attr('fill', '#FFFFFF')
+
+  let pointsList = []
+
+  for (let i =0; i < solar.length; i++) {
+    pointsList.push([timeScale(timeClean(solar[i]['Time'])), wattScale(solar[i]['W'])])
+    }
+
+  let lineGen = d3.line()
+  let pathData = lineGen(pointsList)
+
+  adhInner
+    .append('path')
+    .attr('d', pathData)
+    .attr('stroke-width', .15)
+    .attr('stroke', 'yellow')
+    .attr('fill', 'transparent')
+    .attr('opacity', .9)
+
+
+  console.log(pointsList)
+  console.log(solar.length)
+  console.log(pathData)
+
+  
 
 
   }
