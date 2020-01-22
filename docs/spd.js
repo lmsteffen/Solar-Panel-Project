@@ -4,8 +4,8 @@ let outerHeight = 450;
 let innerWidth = outerWidth - margins.left - margins.right;
 let innerHeight = outerHeight - margins.top - margins.bottom;
 
-let myData = []
-let myMW = []
+let lmsData = []
+let hmData = []
 
 let lmsOuter = d3
   .select("#heat-map")
@@ -28,8 +28,6 @@ let adhInner = adhOuter
   .attr("height", innerHeight)
   .attr("transform", "translate(" + margins.left + "," + margins.right + ")");
 
- d3.csv('ordered-data.csv').then(draw)
-
 lmsOuter //border
   .append("rect")
   .attr("width", outerWidth)
@@ -46,25 +44,22 @@ function timeclean(time) { //takes "HH:MM" as input and outputs total minutes
   return 60*hr + min
 }
 
-  d3.csv('ordered-data.csv').then(draw)
-  d3.csv('heatmap-data.csv').then(wrangle)
+function wrangle(data) {
+  lmsData = data
+  hmData = d3.rollups(lmsData, v => d3.mean(v, v => v.W), d => d.Month, d => d.Hour)
+}
 
-  function wrangle(data) {
-    myData = data
-    myMW = d3.rollups(myData, v => d3.mean(v, v => v.W), d => d.Month, d => d.Hour)
-  }
-
+  Promise.all([
+  d3.csv('ordered-data.csv'),
+  d3.csv('heatmap-data.csv')
+  ]).then(function(data) {
+    draw(data[0])
+    wrangle(data[1])
+    drawHM(data[1])
+  })
   
   
   function draw(solar) {    
-
-    lmsInner.append('circle')
-    .attr('cx', 200)
-    .attr('cy', 200)
-    .attr('r', 20)
-    .attr('fill', 'red')
-
-    //console.log(solar)
 
     adhOuter //border
       .append("rect")
@@ -73,14 +68,7 @@ function timeclean(time) { //takes "HH:MM" as input and outputs total minutes
       .attr("fill", "transparent")
       .attr("stroke", "#333333")
       .attr("stroke-width", 3);
-
-    lmsOuter //border
-      .append("rect")
-      .attr("width", outerWidth)
-      .attr("height", outerHeight)
-      .attr("fill", "transparent")
-      .attr("stroke", "#333333")
-      .attr("stroke-width", 3);
+    
 
     let wattScale = d3
       .scaleLinear() // Lauren, this might be useful for you as well
@@ -94,12 +82,6 @@ function timeclean(time) { //takes "HH:MM" as input and outputs total minutes
       .domain( [0000, 1439] )
       .range([0, innerWidth])
     let timeAxis = d3.axisBottom(timeScale)
-
-    let colorScale = d3
-      .scaleSequential()
-      .interpolator(d3.interpolateViridis)
-      .domain([0, 6012])
-
 
     adhInner //drawing
       .selectAll('circle')
@@ -126,12 +108,63 @@ function timeclean(time) { //takes "HH:MM" as input and outputs total minutes
   adhInner //creates y axis
     .append('g')
     .attr('class', 'y axis')
-    .call(wattAxis)
+    .call(wattAxis)   
 
+  }
 
-      
+function drawHM(data) {
 
+  lmsInner.append('circle')
+    .attr('cx', 200)
+    .attr('cy', 200)
+    .attr('r', 20)
+    .attr('fill', 'red')
+
+  lmsOuter //border
+    .append("rect")
+    .attr("width", outerWidth)
+    .attr("height", outerHeight)
+    .attr("fill", "transparent")
+    .attr("stroke", "#333333")
+    .attr("stroke-width", 3);
+
+  let colorScale = d3
+    .scaleSequential()
+    .interpolator(d3.interpolateViridis)
+    .domain([0, 6012])
+
+  let monthScale = d3
+    .scaleBand()
+    .domain([04, 12])
+    // .domain(['Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'])
+    .range([0, innerWidth])
+  let monthAxis = d3.axisBottom(monthScale)
+
+  let hourScale = d3
+    .scaleBand()
+    .domain([00, 23])
+    .range([innerHeight, 0])
+  let hourAxis = d3.axisLeft(hourScale)
+
+  lmsInner  // x axis for heat map
+    .append('g')
+    .attr('transform', 'translate(' + 0 + ',' + innerHeight + ')')
+    .attr('class', 'x axis')
+    .call(monthAxis)
+
+  lmsInner  // y axis for heat map
+    .append('g')
+    .attr('class', 'y axis')
+    .call(hourAxis)  
     
-    
-
+  // lmsInner
+  //   .selectall('rect')
+  //   .data()
+  //   .enter()
+  //   .append('rect')
+  //   .attr('x', d => monthScale(d.Month))
+  //   .attr('y', d => hourScale(d.Hour))
+  //   .attr('width', monthScale.bandwidth())
+  //   .attr('height', hourScale.bandwidth())
+  //   .style('stroke', 'red')
   }
