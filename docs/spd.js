@@ -1,4 +1,4 @@
-let margins = { top: 30, bottom: 30, left: 38, right: 30 };
+let margins = { top: 45, bottom: 45, left: 60, right: 45 };
 let outerWidth = 800;
 let outerHeight = 450;
 let innerWidth = outerWidth - margins.left - margins.right;
@@ -41,7 +41,7 @@ lmsOuter //border
 function timeclean(time) { //takes "HH:MM" as input and outputs total minutes
   hr = +time.slice(0,2)
   min = +time.slice(3,5)
-  return 60*hr + min
+  return hr + min/60
 }
 
 function wrangle(data) {
@@ -79,9 +79,14 @@ function wrangle(data) {
 
     let timeScale = d3 //make sure you use timeclean()
       .scaleLinear()
-      .domain( [0000, 1439] )
+      .domain( [0000, 24] )
       .range([0, innerWidth])
-    let timeAxis = d3.axisBottom(timeScale)
+    let timeAxis = d3.axisBottom(timeScale).ticks()//.tickValues()
+
+    /*let testTimeScale = d3
+      scaleTime
+      .domain([])
+      .range([])*/
 
     adhInner //drawing
       .selectAll('circle')
@@ -89,9 +94,15 @@ function wrangle(data) {
       .enter()
       .append('circle')
       .attr('cx', d => timeScale(timeclean(d.Time)))
+      //.attr('cx', d => testTimeScale(d.Time))
       .attr('cy', d => wattScale(d.W))
       .style('fill', 'red')
       .attr('r', .5)
+
+    adhInner
+      .selectAll('line')
+      .data(solar)
+      .enter()
       .append('line')
       .style('stroke', 'green')
       /*.attr('x1', (d, i) => timeScale(timeclean(d.Time)))
