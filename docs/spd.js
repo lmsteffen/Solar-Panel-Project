@@ -4,13 +4,19 @@ let outerHeight = 450;
 let innerWidth = outerWidth - margins.left - margins.right;
 let innerHeight = outerHeight - margins.top - margins.bottom;
 
-let outerWidthHM = 700;
-let outerHeightHM = 700;
-let innerWidthHM = outerWidthHM - margins.left - margins.right;
-let innerHeightHM = outerHeightHM - margins.top - margins.bottom;
+let outerWidthHM = 1000;
+let outerHeightHM = 600;
+let marginsHM = { top: 45, bottom:45, left: 60, right: 250 };
+let innerWidthHM = outerWidthHM - marginsHM.left - marginsHM.right;
+let innerHeightHM = outerHeightHM - marginsHM.top - marginsHM.bottom;
 
 let lmsData = []
 let hmData = []
+let flatData = []
+let months = [4, 5, 6, 7, 8, 9, 10, 11, 12]
+let hours = [5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21]
+
+
 
 let lmsOuter = d3
   .select("#heat-map")
@@ -19,7 +25,7 @@ let lmsOuter = d3
 
 let lmsInner = lmsOuter
   .append("g")
-  .attr("transform", "translate(" + margins.left + "," + margins.right + ")")
+  .attr("transform", "translate(" + marginsHM.left + "," + marginsHM.top + ")")
 
 let adhOuter = d3
   .select("#adhviz")
@@ -39,9 +45,22 @@ function timeclean(time) { //takes "HH:MM" as input and outputs total minutes
   return hr + min/60
 }
 
+
 function wrangle(data) {
+  flatData = []
+
   lmsData = data
-  hmData = d3.rollups(lmsData, v => d3.mean(v, v => v.W) * 4, d => d.Month, d => d.Hour)
+  hmData = d3.rollup(lmsData, v => d3.mean(v, v => v.W) * 4, d => +d.Month, d => +d.Hour)
+  console.log(hmData)
+  for (let m of months){
+    for (let h of hours) {
+      flatData.push({
+        month: m,
+        hour: h,
+        W: hmData.get(m).get(h)
+      }) 
+    }
+  }
 }
 
   Promise.all([
@@ -154,14 +173,14 @@ function drawHM(data) {
 
   let monthScale = d3
     .scaleBand()
-    .domain([4, 5, 6, 7, 8, 9, 10, 11, 12])  // hmData?
+    .domain(months)  // hmData?
     // .domain(['Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'])
     .range([0, innerWidthHM])
   let monthAxis = d3.axisBottom(monthScale)
 
   let hourScale = d3
     .scaleBand()
-    .domain([5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21])
+    .domain(hours)
     .range([innerHeightHM, 0])
   let hourAxis = d3.axisLeft(hourScale)
 
@@ -176,7 +195,7 @@ function drawHM(data) {
     .attr('class', 'y axis')
     .call(hourAxis)  
     
-  lmsInner
+  lmsInner  // draw
     .selectAll('rect')
     .data(data)
     .enter()
@@ -188,26 +207,79 @@ function drawHM(data) {
     .style('stroke', 'red')
 
   lmsOuter 
-    .append('text')
+    .append('text')  // x text
     .attr('class', 'x axis')
-    .attr('x', margins.left + innerWidthHM / 2)
-    .attr('y', outerHeightHM - margins.bottom / 3)
+    .attr('x', marginsHM.left + innerWidthHM / 2)
+    .attr('y', outerHeightHM - marginsHM.bottom / 3)
     .attr('text-anchor', 'middle')
     .text('Month')
     .attr('fill', '#FFFFFF')
 
-    lmsOuter
+    lmsOuter      // y text
     .append('text')
     .attr('class', 'y axis')
-    .attr('x', margins.left / 2)
-    .attr('y', outerHeightHM - margins.bottom - innerHeightHM / 2.5 )
+    .attr('x', marginsHM.left / 2)
+    .attr('y', outerHeightHM - marginsHM.bottom - innerHeightHM / 2.5 )
     .attr(
       'transform',
-      `rotate(-90 ${margins.left / 2} ${outerHeightHM - margins.bottom - innerHeightHM / 2.5 })`
+      `rotate(-90 ${marginsHM.left / 2} ${outerHeightHM - marginsHM.bottom - innerHeightHM / 2.5 })`
     )
     .text('Time of Day (Hours)')
     .attr('fill', '#FFFFFF')
+
+    lmsOuter      // guide for watt-hours
+    .append('rect')
+    .attr('x', outerWidthHM - 150 )
+    .attr('y', marginsHM.top)
+    .attr('width', 75)
+    .attr('height', innerHeightHM)
+    .attr('stroke', 'white')
+    .style("fill", "url(#linear-gradient)");
+
+    let linearGradient = lmsOuter.append("defs")
+      .append("linearGradient")
+      .attr("id", "linear-gradient");
+
+    linearGradient.append("stop")
+      .attr("offset", "0%")
+      .attr("stop-color", color(1));
+
+    linearGradient.append("stop")
+      .attr("offset", "25%")
+      .attr("stop-color", color(2));
+
+    linearGradient.append("stop")
+      .attr("offset", "50%")
+      .attr("stop-color", color(3));
+
+    linearGradient.append("stop")
+      .attr("offset", "75%")
+      .attr("stop-color", color(4));
+
+    linearGradient.append("stop")
+      .attr("offset", "100%")
+      .attr("stop-color", color(5)); 
   }
+
+  let colorRange = ['#440154FF', '#481567FF', '#482677FF', '#453781FF', '#404788FF']
+  // <color>#39568CFF </color>
+  // <color>#33638DFF </color>
+  // <color>#2D708EFF </color>
+  // <color>#287D8EFF </color>
+  // <color>#238A8DFF </color>
+  // <color>#1F968BFF </color>
+  // <color>#20A387FF </color>
+  // <color>#29AF7FFF </color>
+  // <color>#3CBB75FF </color>
+  // <color>#55C667FF </color>
+  // <color>#73D055FF </color>
+  // <color>#95D840FF </color>
+  // <color>#B8DE29FF </color>
+  // <color>#DCE319FF </color>
+  // <color>#FDE725FF]
+        
+  let color = d3.scaleLinear().range(colorRange).domain([1, 2, 3, 4, 5]);
+
 
   
 
