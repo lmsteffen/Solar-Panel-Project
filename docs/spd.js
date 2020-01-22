@@ -79,12 +79,7 @@ function wrangle(data) {
       .range([0, innerWidth])
     let timeAxis = d3.axisBottom(timeScale).ticks()//.tickValues()
 
-    /*let testTimeScale = d3
-      scaleTime
-      .domain([])
-      .range([])*/
-
-    adhInner //drawing
+    adhInner //points
       .selectAll('circle')
       .data(solar)
       .enter()
@@ -95,7 +90,8 @@ function wrangle(data) {
       .style('fill', 'red')
       .attr('r', .5)
 
-    adhInner
+    
+    adhInner //lines?
       .selectAll('line')
       .data(solar)
       .enter()
@@ -115,7 +111,30 @@ function wrangle(data) {
   adhInner //creates y axis
     .append('g')
     .attr('class', 'y axis')
-    .call(wattAxis)   
+    .call(wattAxis)
+
+  adhOuter //x text
+    .append('text')
+    .attr('class', 'x axis')
+    .attr('x', margins.left + innerWidth / 2)
+    .attr('y', outerHeight - margins.bottom / 4)
+    .attr('text-anchor', 'middle')
+    .text('Time of Day (in Hours)')
+    .attr('fill', '#FFFFFF')
+
+  adhOuter //y text
+    .append('text')
+    .attr('class', 'y axis')
+    .attr('x', margins.left / 2)
+    .attr('y', margins.bottom + innerHeight / 2.16)
+    .attr('text-anchor', 'middle')
+    .attr(
+      'transform',
+      `rotate(-90 ${margins.left / 2} ${margins.bottom + innerHeight / 2})`
+    )
+    .text('Watt-hours')
+    .attr('fill', '#FFFFFF')
+
 
   }
 
