@@ -44,39 +44,39 @@ function wrangle(data) {
   hmData = d3.rollups(lmsData, v => d3.mean(v, v => v.W) * 4, d => d.Month, d => d.Hour)
 }
 
-  Promise.all([
-  d3.csv('ordered-data.csv'),
-  d3.csv('heatmap-data.csv')
-  ]).then(function(data) {
-    draw(data[0])
-    wrangle(data[1])
-    drawHM(data[1])
-  })
+Promise.all([
+d3.csv('ordered-data.csv'),
+d3.csv('heatmap-data.csv')
+]).then(function(data) {
+  draw(data[0])
+  wrangle(data[1])
+  drawHM(data[1])
+})
   
   
-  function draw(solar) {    
+function draw(solar) {    
 
-    adhOuter //border
-      .append("rect")
-      .attr("width", outerWidth)
-      .attr("height", outerHeight)
-      .attr("fill", "transparent")
-      .attr("stroke", "#333333")
-      .attr("stroke-width", 3);
-    
+  adhOuter //border
+    .append("rect")
+    .attr("width", outerWidth)
+    .attr("height", outerHeight)
+    .attr("fill", "transparent")
+    .attr("stroke", "#333333")
+    .attr("stroke-width", 3);
+  
 
-    let wattScale = d3
-      .scaleLinear() 
-      .domain( [Math.min(...solar.map(d => d.W)), Math.max(...solar.map(d => d.W))] )
-      .range([innerHeight, 0]);
-    let wattAxis = d3.axisLeft(wattScale)
+  let wattScale = d3
+    .scaleLinear() 
+    .domain( [Math.min(...solar.map(d => d.W)), Math.max(...solar.map(d => d.W))] )
+    .range([innerHeight, 0]);
+  let wattAxis = d3.axisLeft(wattScale)
 
 
-    let timeScale = d3 //make sure you use timeClean()
-      .scaleLinear()
-      .domain( [0000, 24] )
-      .range([0, innerWidth])
-    let timeAxis = d3.axisBottom(timeScale).ticks()//.tickValues()
+  let timeScale = d3 //make sure you use timeClean()
+    .scaleLinear()
+    .domain( [0000, 24] )
+    .range([0, innerWidth])
+  let timeAxis = d3.axisBottom(timeScale).ticks()//.tickValues()
 
     /* adhInner //points
       .selectAll('circle')
@@ -88,9 +88,6 @@ function wrangle(data) {
       .attr('cy', d => wattScale(d.W))
       .style('fill', 'red')
       .attr('r', .5) */
-
-    
-    //console.log(timeScale(timeClean(solar[8]['Time']))) //for testing
 
   adhInner //creates x axis
     .append('g')
@@ -127,14 +124,14 @@ function wrangle(data) {
 
   let pointsList = []
 
-  for (let i =0; i < solar.length; i++) {
+  for (let i =0; i < solar.length; i++) { //creates list of points to plot with line
     pointsList.push([timeScale(timeClean(solar[i]['Time'])), wattScale(solar[i]['W'])])
     }
 
   let lineGen = d3.line()
   let pathData = lineGen(pointsList)
 
-  adhInner
+  adhInner //line
     .append('path')
     .attr('d', pathData)
     .attr('stroke-width', .15)
@@ -143,14 +140,8 @@ function wrangle(data) {
     .attr('opacity', .9)
 
 
-  console.log(pointsList)
-  console.log(solar.length)
-  console.log(pathData)
 
-  
-
-
-  }
+}
 
 function drawHM(data) {
 
