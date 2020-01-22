@@ -27,15 +27,6 @@ let adhInner = adhOuter
   .attr("width", innerWidth)
   .attr("height", innerHeight)
   .attr("transform", "translate(" + margins.left + "," + margins.right + ")");
-
-lmsOuter //border
-  .append("rect")
-  .attr("width", outerWidth)
-  .attr("height", outerHeight)
-  .attr("fill", "transparent")
-  .attr("stroke", "#333333")
-  .attr("stroke-width", 2);
-
   
 
 function timeclean(time) { //takes "HH:MM" as input and outputs total minutes
@@ -125,12 +116,6 @@ function wrangle(data) {
 
 function drawHM(data) {
 
-  lmsInner.append('circle')
-    .attr('cx', 200)
-    .attr('cy', 200)
-    .attr('r', 20)
-    .attr('fill', 'red')
-
   lmsOuter //border
     .append("rect")
     .attr("width", outerWidth)
@@ -146,7 +131,7 @@ function drawHM(data) {
 
   let monthScale = d3
     .scaleBand()
-    .domain([04, 12])
+    .domain([04, 12])  // hmData?
     // .domain(['Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'])
     .range([0, innerWidth])
   let monthAxis = d3.axisBottom(monthScale)
@@ -168,14 +153,14 @@ function drawHM(data) {
     .attr('class', 'y axis')
     .call(hourAxis)  
     
-  // lmsInner
-  //   .selectall('rect')
-  //   .data()
-  //   .enter()
-  //   .append('rect')
-  //   .attr('x', d => monthScale(d.Month))
-  //   .attr('y', d => hourScale(d.Hour))
-  //   .attr('width', monthScale.bandwidth())
-  //   .attr('height', hourScale.bandwidth())
-  //   .style('stroke', 'red')
+  lmsInner
+    .selectAll('rect')
+    .data(data)
+    .enter()
+    .append('rect')
+    .attr('x', d => monthScale(d.Month))  // ask about this too
+    .attr('y', d => hourScale(d.Hour))
+    .attr('width', monthScale.bandwidth())
+    .attr('height', hourScale.bandwidth())
+    .style('stroke', 'red')
   }
