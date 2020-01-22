@@ -65,29 +65,30 @@ function wrangle(data) {
 }
 
 let wattScale = d3
-.scaleLinear() 
-.domain( [0, 6012] )
-.range([innerHeight, 0]);
-let wattAxis = d3.axisLeft(wattScale)
+  .scaleLinear() 
+  .domain( [0, 6012] ) //I know this is bad code, but it gets called in multiple .then() functions
+  .range([innerHeight, 0]);
+  let wattAxis = d3.axisLeft(wattScale)
 
 
 let timeScale = d3 //make sure you use timeClean()
-.scaleLinear()
-.domain( [0, 24] )
-.range([0, innerWidth])
-let timeAxis = d3.axisBottom(timeScale).ticks()//.tickValues()
+  .scaleLinear()
+  .domain( [0, 24] )
+  .range([0, innerWidth])
+  let timeAxis = d3.axisBottom(timeScale).ticks()//.tickValues()
 
 Promise.all([
 d3.csv('ordered-data.csv'),
 d3.csv('heatmap-data.csv')
 ]).then(function(data) {
-  draw(data[0])
+  setup(data[0])
   wrangle(data[1])
   drawHM(data[1])
   updateLine(data[0])
 })
 
 function updateLine(solar) {
+
   for (let i = 0; i < solar.length; i++) { //creates list of points to plot with line
     pointsList.push([timeScale(timeClean(solar[i]['Time'])), wattScale(solar[i]['W'])])
     }
@@ -105,7 +106,7 @@ function updateLine(solar) {
 }
   
   
-function draw(solar) {    
+function setup(solar) {    
 
   adhOuter //border
     .append("rect")
