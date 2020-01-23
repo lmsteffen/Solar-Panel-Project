@@ -100,6 +100,7 @@ function updateLine(solar) {
     .attr('stroke', 'yellow')
     .attr('fill', 'transparent')
     .attr('opacity', 1)
+    .attr('id', 'chart')
 
 
   let sliderRange = d3
@@ -112,7 +113,27 @@ function updateLine(solar) {
     .fill('yellow')
     .on('onchange', val => {
       let dateRange = [solar[Math.round(val[0])*96]['Date'], solar[Math.round(val[1])*96]['Date']]
-      d3.select('p#value-range').text(dateRange.join('-'));
+      d3.select('p#value-range').text(dateRange.join('-')); //changes text on slider
+
+      let newPL = pointsList.slice(Math.round(val[0])*96, Math.round(val[1])*96)
+
+      console.log(pointsList.length)
+      console.log(newPL.length)
+      
+      adhInner
+        .select('#chart')
+        .remove()
+
+        adhInner //line
+        .append('path')
+        .attr('d', lineGen(newPL))
+        .attr('stroke-width', .15)
+        .attr('stroke', 'yellow')
+        .attr('fill', 'transparent')
+        .attr('opacity', 1)
+        .attr('id', 'chart')
+
+
     });
 
 
