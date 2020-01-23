@@ -24,6 +24,11 @@ let lmsOuter = d3
   .attr("width", outerWidthHM)
   .attr("height", outerHeightHM)
 
+  d3.select('div.lms')
+    // .style('position', 'relative')
+    .style('width', outerWidthHM + 'px')
+    .style('margin', 'auto')
+
 lmsOuter //border
   .append("rect")
   .attr("width", outerWidthHM)
@@ -267,7 +272,7 @@ function drawHM(data) {
       .html(Wh)
       
       .style('visibility', 'visible')
-      .style('left', mouseLoc[0] + marginsHM.left + innerWidthHM / 1.5 + 'px')
+      .style('left', mouseLoc[0] + 'px')
       .style('top', mouseLoc[1] + outerHeight + outerHeightHM + 'px' )
   }
 
@@ -305,7 +310,7 @@ function drawHM(data) {
     
   lmsOuter      // text for legend
     .append('text')
-    .attr('x', marginsHM.left + innerWidth / 3)
+    .attr('x', marginsHM.left + innerWidth / 3.5)
     .attr('y', marginsHM.top / 2.5)
     .attr('text-anchor', 'middle')
     .text('System Production (watt-hours)')
