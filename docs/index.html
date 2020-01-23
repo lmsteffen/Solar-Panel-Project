@@ -4,16 +4,20 @@
     <meta charset="utf-8" />
     <title>Solar Panel Data</title>
     <script src="https://d3js.org/d3.v5.min.js"></script>
+    <script src="https://unpkg.com/d3-simple-slider"></script>
     <script src="https://d3js.org/d3-array.v2.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.15/lodash.js"></script>
     <link rel="stylesheet" href="spd.css" />
   </head>
+  
   <body>
     <div class="adh">
       <h1>Viz 1</h1>
       <svg class="adh" id="adhviz"></svg>
-      <div class="controls">
-
+      <h3>Date Range</h3>
+      <div class="row align-items-center">
+        <div class="col-sm-2"><p id="value-range"></p></div>
+        <div class="col-sm"><div id="slider-range"></div></div>
       </div>
 
 

@@ -100,6 +100,36 @@ function updateLine(solar) {
     .attr('stroke', 'yellow')
     .attr('fill', 'transparent')
     .attr('opacity', 1)
+
+
+  let sliderRange = d3
+    .sliderBottom()
+    .min(0)
+    .max(286)
+    .width(286)
+    .ticks(0)
+    .default([0, 286])
+    .fill('yellow')
+    .on('onchange', val => {
+      let dateRange = [solar[Math.round(val[0])*96]['Date'], solar[Math.round(val[1])*96]['Date']]
+      d3.select('p#value-range').text(dateRange.join('-'));
+    });
+
+
+  let gRange = d3
+    .select('div#slider-range')
+    .append('svg')
+    .attr('width', 500)
+    .attr('height', 100)
+    .append('g')
+    .attr('transform', 'translate(30,30)');
+
+  gRange.call(sliderRange);
+
+  d3.select('p#value-range').text(
+    ['4/11//19', '1/20/20'].join('-')
+  );
+
 }
   
   
