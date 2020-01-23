@@ -2,11 +2,9 @@ body {
   font-family: "Gill Sans";
   color: #cccccc;
   background-color: #222222;
+  text-align: center;
 }
 
-#adhviz {
-  /* background-color: #000000 */
-}
 
 .tooltip {
   position: absolute;
@@ -15,3 +13,5 @@ body {
   padding: '5px';
   background-color: white;
 }
+
+

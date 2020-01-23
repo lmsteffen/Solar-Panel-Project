@@ -9,15 +9,28 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.15/lodash.js"></script>
     <link rel="stylesheet" href="spd.css" />
   </head>
-  
+
   <body>
+    <div class='title'>
+      <h1>Math W-82 Final Project</h1>
+      <h5>Interactive visualizations created by Lauren Steffen and Adam DenHaan using solar panel 
+        data provided by Professor Fynewever. 
+      </h5></div>
+
+    <br>
+    <br>
+
+    
     <div class="adh">
-      <h1>Viz 1</h1>
+      <h2>By-Day Data</h2>
+      <h4 class='adh' id='desc'>Use the slider below to scrub through the data. Notice how the days length changes throughout the seasons, 
+          as well as the total output by day.
+      </h4>
       <svg class="adh" id="adhviz"></svg>
       <h3>Date Range</h3>
       <div class="row align-items-center">
-        <div class="col-sm-2"><p id="value-range"></p></div>
-        <div class="col-sm"><div id="slider-range"></div></div>
+        <div><p id="value-range"></p></div>
+        <div><div id="slider-range"></div></div>
       </div>
 
 
@@ -33,6 +46,7 @@
       <svg id="heat-map"></svg>   
     
     </div>
+    <h6>This website was created to fulfill the requirements of Math W82: Data Visualization with D3 at Calvin University, January 2020.</h6>
 
     <script src="spd.js"></script>
   </body>

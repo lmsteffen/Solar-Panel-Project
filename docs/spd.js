@@ -39,13 +39,11 @@ let adhInner = adhOuter
   .attr("height", innerHeight)
   .attr("transform", "translate(" + margins.left + "," + margins.right + ")");
   
-
 function timeClean(time) { //takes "HH:MM" as input and outputs total minutes
   hr = +time.slice(0,2)
   min = +time.slice(3,5)
   return hr + min/60
 }
-
 
 function flatten(data) {
   flatData = []
@@ -102,8 +100,7 @@ function updateLine(solar) {
     .attr('opacity', 1)
     .attr('id', 'chart')
 
-
-  let sliderRange = d3
+  let sliderRange = d3 //slider info
     .sliderBottom()
     .min(0)
     .max(286)
@@ -116,15 +113,12 @@ function updateLine(solar) {
       d3.select('p#value-range').text(dateRange.join('-')); //changes text on slider
 
       let newPL = pointsList.slice(Math.round(val[0])*96, Math.round(val[1])*96)
-
-      console.log(pointsList.length)
-      console.log(newPL.length)
       
       adhInner
         .select('#chart')
         .remove()
 
-        adhInner //line
+        adhInner //new line
         .append('path')
         .attr('d', lineGen(newPL))
         .attr('stroke-width', .15)
@@ -132,25 +126,21 @@ function updateLine(solar) {
         .attr('fill', 'transparent')
         .attr('opacity', 1)
         .attr('id', 'chart')
-
-
     });
-
 
   let gRange = d3
     .select('div#slider-range')
     .append('svg')
     .attr('width', 500)
-    .attr('height', 100)
+    .attr('height', 80)
     .append('g')
-    .attr('transform', 'translate(30,30)');
+    .attr('transform', 'translate(105,10)');
 
   gRange.call(sliderRange);
 
   d3.select('p#value-range').text(
     ['4/11//19', '1/20/20'].join('-')
   );
-
 }
   
   
@@ -163,18 +153,6 @@ function setup(solar) {
     .attr("fill", "transparent")
     .attr("stroke", "#333333")
     .attr("stroke-width", 3);
-  
-
-    /* adhInner //points
-      .selectAll('circle')
-      .data(solar)
-      .enter()
-      .append('circle')
-      .attr('cx', d => timeScale(timeClean(d.Time)))
-      //.attr('cx', d => testTimeScale(d.Time))
-      .attr('cy', d => wattScale(d.W))
-      .style('fill', 'red')
-      .attr('r', .5) */
 
   adhInner //creates x axis
     .append('g')
@@ -208,8 +186,6 @@ function setup(solar) {
     )
     .text('Watt-hours')
     .attr('fill', '#FFFFFF')
-
-
 }
 
 function drawHM(data) {
