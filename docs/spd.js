@@ -24,9 +24,18 @@ let lmsOuter = d3
   .attr("width", outerWidthHM)
   .attr("height", outerHeightHM)
 
+lmsOuter //border
+  .append("rect")
+  .attr("width", outerWidthHM)
+  .attr("height", outerHeightHM)
+  .attr("fill", "transparent")
+  .attr("stroke", "#333333")
+  .attr("stroke-width", 3);
+
 let lmsInner = lmsOuter
   .append("g")
-  .attr("transform", "translate(" + marginsHM.left + "," + marginsHM.top + ")")
+  .attr("transform", "translate(" + marginsHM.left + "," + marginsHM.top + ")") 
+
 
 let adhOuter = d3
   .select("#adhviz")
@@ -189,15 +198,7 @@ function setup(solar) {
 }
 
 function drawHM(data) {
-
-  // lmsOuter //border
-  //   .append("rect")
-  //   .attr("width", outerWidthHM)
-  //   .attr("height", outerHeightHM)
-  //   .attr("fill", "transparent")
-  //   .attr("stroke", "#333333")
-  //   .attr("stroke-width", 3);
-
+  
   let colorScale = d3
     .scaleSequential()
     .interpolator(d3.interpolateViridis)
@@ -207,7 +208,7 @@ function drawHM(data) {
     .scaleBand()
     .domain(months)  
     .range([0, innerWidthHM])
-    .padding(0.1)
+    .padding(0.05)
   let monthAxis = d3.axisBottom(monthScale)
 
   let hourScale = d3
@@ -219,7 +220,7 @@ function drawHM(data) {
 
   lmsInner  // x axis for heat map
     .append('g')
-    .style('font', "14px Gill Sans")
+    .style('font', "14px Oswald")
     .attr('transform', 'translate(' + 0 + ',' + innerHeightHM + ')')
     .attr('class', 'x axis')
     .call(monthAxis.tickSize(0))
@@ -229,7 +230,7 @@ function drawHM(data) {
 
   lmsInner  // y axis for heat map
     .append('g')
-    .style('font', "14px Gill Sans")
+    .style('font', "14px Oswald")
     .attr('class', 'y axis')
     .call(hourAxis.tickSize(0))
     .select('.domain')
@@ -245,15 +246,13 @@ function drawHM(data) {
     .attr('width', monthScale.bandwidth())
     .attr('height', hourScale.bandwidth())
     .style('stroke', '#FFFFFF')
-    // .style('stroke', 'red')
     .style('fill', d => colorScale(d.W))
     .style('fill-opacity', 1)
     .style('stroke-opacity', 1)
-    .on('mouseover', function(d) {
+    .on('mouseover', function(d) {      
       darkenSquare(this)
       showWh(d, this)
     })
-    // .on('mousemove', showWh)
     .on('mouseleave', function(d) {
       hideWh()
       lightenSquare(d, this)
@@ -262,15 +261,14 @@ function drawHM(data) {
   
 
   function showWh(d, ref) {
-    let Wh = 'System Production (watt-hours): ' + d.W
+    let Wh = 'System Production (watt-hours): ' + Math.floor(d.W)
     let mouseLoc = d3.mouse(ref)
     d3.select('.tooltip')
       .html(Wh)
+      
       .style('visibility', 'visible')
-      // .style('left', mouseLoc[0] + marginsHM.left + monthScale.bandwidth() + 'px')
-      // .style('top', mouseLoc[1] - hourScale.bandwidth() + 'px')
-      .style('left', mouseLoc[0] + marginsHM.left + monthScale.bandwidth() + 'px')
-      .style('top', mouseLoc[1])
+      .style('left', mouseLoc[0] + marginsHM.left + innerWidthHM / 1.5 + 'px')
+      .style('top', mouseLoc[1] + outerHeight + outerHeightHM + 'px' )
   }
 
   function lightenSquare(d, ref) {
@@ -318,7 +316,7 @@ function drawHM(data) {
   for (let i = 0; i < 5; i++) {
     lmsOuter
       .append('text')
-      .style('font', "14px Gill Sans")
+      .style('font', "14px Oswald")
       .attr('x', marginsHM.left + 6 + j)
       .attr('y', marginsHM.top / 1.25)
       .attr('text-anchor', 'middle')
@@ -336,7 +334,7 @@ function drawHM(data) {
     .attr('stroke', 'white')
     .style("fill", "url(#linear-gradient)");
 
-  let colorRange = ['#450256', '#450256', '#21908D', '#5AC865', '#F9E721']   // hexcodes for the heat map legend 
+  let colorRange = ['#450154', '#3B528B', '#21908C', '#5DC863', '#FDE725']   // hexcodes for the heat map legend 
   let color = d3.scaleLinear().range(colorRange).domain([1, 2, 3, 4, 5]);
 
   let linearGradient = lmsOuter.append("defs")
