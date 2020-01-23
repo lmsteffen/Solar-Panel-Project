@@ -247,7 +247,7 @@ function drawHM(data) {
     .style('stroke', '#FFFFFF')
     .style('fill', d => colorScale(d.W))
     .style('fill-opacity', 1)
-    .style('stroke-opacity', .7)
+    .style('stroke-opacity', 1)
     .on('mouseover', darkenSquare)
     // .on('mousemove', showWh)
     // .on('mouseleave', function(d) {
@@ -255,11 +255,11 @@ function drawHM(data) {
     //   lightenSquare(d, this)
     // })
 
-  function darkenSquare() {
+  function darkenSquare(d) {
+    console.log('working')
     d3.select(this)
-      .style('fill-opacity', 0.5)
-      .style('stroke-opacity', 1)
       .style('stroke', 'red')
+     
   }
 
   // function showWh(d) {
@@ -319,7 +319,7 @@ function drawHM(data) {
       .append('text')
       .style('font', "14px Gill Sans")
       .attr('x', marginsHM.left + 6 + j)
-      .attr('y', marginsHM.top / 1.3)
+      .attr('y', marginsHM.top / 1.25)
       .attr('text-anchor', 'middle')
       .text(markers[i])
       .attr('fill', '#FFFFFF');
