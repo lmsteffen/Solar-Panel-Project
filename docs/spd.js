@@ -6,7 +6,7 @@ let innerHeight = outerHeight - margins.top - margins.bottom;
 
 let outerWidthHM = 700;
 let outerHeightHM = 700;
-let marginsHM = { top: 150, bottom:45, left: 60, right: 45 };
+let marginsHM = { top: 150, bottom: 45, left: 60, right: 45 };
 let innerWidthHM = outerWidthHM - marginsHM.left - marginsHM.right;
 let innerHeightHM = outerHeightHM - marginsHM.top - marginsHM.bottom;
 
