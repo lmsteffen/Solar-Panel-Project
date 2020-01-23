@@ -4,8 +4,8 @@ let outerHeight = 562.5;
 let innerWidth = outerWidth - margins.left - margins.right;
 let innerHeight = outerHeight - margins.top - margins.bottom;
 
-let outerWidthHM = 600;
-let outerHeightHM = 600;
+let outerWidthHM = 700;
+let outerHeightHM = 700;
 let marginsHM = { top: 150, bottom:45, left: 60, right: 45 };
 let innerWidthHM = outerWidthHM - marginsHM.left - marginsHM.right;
 let innerHeightHM = outerHeightHM - marginsHM.top - marginsHM.bottom;
@@ -279,7 +279,7 @@ function drawHM(data) {
     //   lightenSquare(d, this)
     // })
 
-  function darkenSquare(d) {
+  function darkenSquare() {
     d3.select(this)
       .style('fill-opacity', 0.5)
       .style('stroke-opacity', 1)
@@ -347,7 +347,7 @@ function drawHM(data) {
       .attr('text-anchor', 'middle')
       .text(markers[i])
       .attr('fill', '#FFFFFF');
-    j += 64
+    j += (innerWidthHM / 1.86)/4
   }
 
   lmsOuter             // legend 
