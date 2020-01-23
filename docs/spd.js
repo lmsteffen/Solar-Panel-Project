@@ -4,7 +4,7 @@ let outerHeight = 562.5;
 let innerWidth = outerWidth - margins.left - margins.right;
 let innerHeight = outerHeight - margins.top - margins.bottom;
 
-let outerWidthHM = 700;
+let outerWidthHM = 1000;
 let outerHeightHM = 700;
 let marginsHM = { top: 150, bottom:45, left: 60, right: 45 };
 let innerWidthHM = outerWidthHM - marginsHM.left - marginsHM.right;
@@ -190,13 +190,13 @@ function setup(solar) {
 
 function drawHM(data) {
 
-  lmsOuter //border
-    .append("rect")
-    .attr("width", outerWidthHM)
-    .attr("height", outerHeightHM)
-    .attr("fill", "transparent")
-    .attr("stroke", "#333333")
-    .attr("stroke-width", 3);
+  // lmsOuter //border
+  //   .append("rect")
+  //   .attr("width", outerWidthHM)
+  //   .attr("height", outerHeightHM)
+  //   .attr("fill", "transparent")
+  //   .attr("stroke", "#333333")
+  //   .attr("stroke-width", 3);
 
   let colorScale = d3
     .scaleSequential()
@@ -245,43 +245,44 @@ function drawHM(data) {
     .attr('width', monthScale.bandwidth())
     .attr('height', hourScale.bandwidth())
     .style('stroke', '#FFFFFF')
+    // .style('stroke', 'red')
     .style('fill', d => colorScale(d.W))
     .style('fill-opacity', 1)
     .style('stroke-opacity', 1)
-    .on('mouseover', darkenSquare)
+    .on('mouseover', function(d) {
+      darkenSquare(this)
+      showWh(d, this)
+    })
     // .on('mousemove', showWh)
-    // .on('mouseleave', function(d) {
-    //   hideWh()
-    //   lightenSquare(d, this)
-    // })
+    .on('mouseleave', function(d) {
+      hideWh()
+      lightenSquare(d, this)
+    })
 
-  function darkenSquare(d) {
-    console.log('working')
-    d3.select(this)
-      .style('stroke', 'red')
-     
+  
+
+  function showWh(d, ref) {
+    let Wh = 'System Production (watt-hours): ' + d.W
+    let mouseLoc = d3.mouse(ref)
+    d3.select('.tooltip')
+      .html(Wh)
+      .style('visibility', 'visible')
+      // .style('left', mouseLoc[0] + marginsHM.left + monthScale.bandwidth() + 'px')
+      // .style('top', mouseLoc[1] - hourScale.bandwidth() + 'px')
+      .style('left', mouseLoc[0] + marginsHM.left + monthScale.bandwidth() + 'px')
+      .style('top', mouseLoc[1])
   }
 
-  // function showWh(d) {
-  //   let Wh = 'System Production (watt-hours): ' + d.W
-  //   let mouseLoc = d3.mouse(this)
-  //   d3.select('.tooltip')
-  //     .html(Wh)
-  //     .style('visibility', 'visible')
-  //     .style('left', mouseLoc[0] + marginsHM.left + monthScale.bandwidth() + 'px')
-  //     .style('top', mouseLoc[1] - hourScale.bandwidth() + 'px')
-  // }
+  function lightenSquare(d, ref) {
+    d3.select(ref)
+    .style('stroke', '#FFFFFF')
 
-  // function lightenSquare(d, ref) {
-  //   d3.select(ref)
-  //   .style('fill-opacity', 1)
-  //   .style('stroke-opacity', .7)
-  // }
+  }
 
-  // function hideWh() {
-  //   d3.select('.tooltip')
-  //     .style('visibility', 'hidden')
-  // }
+  function hideWh() {
+    d3.select('.tooltip')
+      .style('visibility', 'hidden')
+  }
 
   lmsOuter 
     .append('text')  // x text
@@ -306,7 +307,7 @@ function drawHM(data) {
     
   lmsOuter      // text for legend
     .append('text')
-    .attr('x', marginsHM.left + innerWidth / 5)
+    .attr('x', marginsHM.left + innerWidth / 3)
     .attr('y', marginsHM.top / 2.5)
     .attr('text-anchor', 'middle')
     .text('System Production (watt-hours)')
@@ -361,6 +362,12 @@ function drawHM(data) {
   linearGradient.append("stop")
     .attr("offset", "100%")
     .attr("stop-color", color(5)); 
+}
+
+function darkenSquare(ref) {
+  console.log('working')
+  d3.select(ref)
+    .style('stroke', 'red')
 }
 
   
