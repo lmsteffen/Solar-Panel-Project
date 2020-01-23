@@ -4,16 +4,16 @@ let outerHeight = 450;
 let innerWidth = outerWidth - margins.left - margins.right;
 let innerHeight = outerHeight - margins.top - margins.bottom;
 
-let outerWidthHM = 1000;
+let outerWidthHM = 600;
 let outerHeightHM = 600;
-let marginsHM = { top: 45, bottom:45, left: 60, right: 250 };
+let marginsHM = { top: 150, bottom:45, left: 60, right: 45 };
 let innerWidthHM = outerWidthHM - marginsHM.left - marginsHM.right;
 let innerHeightHM = outerHeightHM - marginsHM.top - marginsHM.bottom;
 
-let lmsData = []
 let hmData = []
 let flatData = []
 let months = [4, 5, 6, 7, 8, 9, 10, 11, 12]
+// let months = ['Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
 let hours = [5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21]
 
 
@@ -46,12 +46,9 @@ function timeClean(time) { //takes "HH:MM" as input and outputs total minutes
 }
 
 
-function wrangle(data) {
+function flatten(data) {
   flatData = []
-
-  lmsData = data
-  hmData = d3.rollup(lmsData, v => d3.mean(v, v => v.W) * 4, d => +d.Month, d => +d.Hour)
-  console.log(hmData)
+  hmData = d3.rollup(data, v => d3.mean(v, v => v.W) * 4, d => +d.Month, d => +d.Hour)
   for (let m of months){
     for (let h of hours) {
       flatData.push({
@@ -61,6 +58,7 @@ function wrangle(data) {
       }) 
     }
   }
+  drawHM(flatData)
 }
 
 Promise.all([
@@ -68,8 +66,7 @@ d3.csv('ordered-data.csv'),
 d3.csv('heatmap-data.csv')
 ]).then(function(data) {
   draw(data[0])
-  wrangle(data[1])
-  drawHM(data[1])
+  flatten(data[1])
 })
   
   
@@ -179,38 +176,47 @@ function drawHM(data) {
 
   let monthScale = d3
     .scaleBand()
-    .domain(months)  // hmData?
-    // .domain(['Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'])
+    .domain(months)  
     .range([0, innerWidthHM])
+    .padding(0.1)
   let monthAxis = d3.axisBottom(monthScale)
 
   let hourScale = d3
     .scaleBand()
     .domain(hours)
     .range([innerHeightHM, 0])
+    .padding(0.05)
   let hourAxis = d3.axisLeft(hourScale)
 
   lmsInner  // x axis for heat map
     .append('g')
+    .style('font', "14px Gill Sans")
     .attr('transform', 'translate(' + 0 + ',' + innerHeightHM + ')')
     .attr('class', 'x axis')
-    .call(monthAxis)
+    .call(monthAxis.tickSize(0))
+    .select('.domain')
+    .remove()
+
 
   lmsInner  // y axis for heat map
     .append('g')
+    .style('font', "14px Gill Sans")
     .attr('class', 'y axis')
-    .call(hourAxis)  
+    .call(hourAxis.tickSize(0))
+    .select('.domain')
+    .remove()
     
   lmsInner  // draw
     .selectAll('rect')
     .data(data)
     .enter()
     .append('rect')
-    .attr('x', d => monthScale(d.Month))  // ask about this too
-    .attr('y', d => hourScale(d.Hour))
+    .attr('x', d => monthScale(d.month))  // ask about this too
+    .attr('y', d => hourScale(d.hour))
     .attr('width', monthScale.bandwidth())
     .attr('height', hourScale.bandwidth())
-    .style('stroke', 'red')
+    .style('stroke', '#FFFFFF')
+    .style('fill', d => colorScale(d.W))
 
   lmsOuter 
     .append('text')  // x text
@@ -221,7 +227,7 @@ function drawHM(data) {
     .text('Month')
     .attr('fill', '#FFFFFF')
 
-    lmsOuter      // y text
+  lmsOuter      // y text
     .append('text')
     .attr('class', 'y axis')
     .attr('x', marginsHM.left / 2)
@@ -232,59 +238,68 @@ function drawHM(data) {
     )
     .text('Time of Day (Hours)')
     .attr('fill', '#FFFFFF')
+    
+  lmsOuter      // text for legend
+    .append('text')
+    .attr('x', marginsHM.left + innerWidth / 5)
+    .attr('y', marginsHM.top / 2.5)
+    .attr('text-anchor', 'middle')
+    .text('System Production (watt-hours)')
+    .attr('fill', '#FFFFFF')
+  
+  let markers = ['0', '4145', '8290', '12435', '16580']  // markers for legend
+  let j = 0
+  for (let i = 0; i < 5; i++) {
+    lmsOuter
+      .append('text')
+      .style('font', "14px Gill Sans")
+      .attr('x', marginsHM.left + 6 + j)
+      .attr('y', marginsHM.top / 1.3)
+      .attr('text-anchor', 'middle')
+      .text(markers[i])
+      .attr('fill', '#FFFFFF');
+    j += 64
+  }
 
-    lmsOuter      // guide for watt-hours
+  lmsOuter             // legend 
     .append('rect')
-    .attr('x', outerWidthHM - 150 )
-    .attr('y', marginsHM.top)
-    .attr('width', 75)
-    .attr('height', innerHeightHM)
+    .attr('x', marginsHM.left + 6 )
+    .attr('y', marginsHM.top / 2)
+    // .attr('y', marginsHM.top)
+    .attr('width', innerWidthHM / 1.86)
+    .attr('height', hourScale.bandwidth())
     .attr('stroke', 'white')
     .style("fill", "url(#linear-gradient)");
 
-    let linearGradient = lmsOuter.append("defs")
-      .append("linearGradient")
-      .attr("id", "linear-gradient");
-
-    linearGradient.append("stop")
-      .attr("offset", "0%")
-      .attr("stop-color", color(1));
-
-    linearGradient.append("stop")
-      .attr("offset", "25%")
-      .attr("stop-color", color(2));
-
-    linearGradient.append("stop")
-      .attr("offset", "50%")
-      .attr("stop-color", color(3));
-
-    linearGradient.append("stop")
-      .attr("offset", "75%")
-      .attr("stop-color", color(4));
-
-    linearGradient.append("stop")
-      .attr("offset", "100%")
-      .attr("stop-color", color(5)); 
-  }
-
-  let colorRange = ['#440154FF', '#481567FF', '#482677FF', '#453781FF', '#404788FF']
-  // <color>#39568CFF </color>
-  // <color>#33638DFF </color>
-  // <color>#2D708EFF </color>
-  // <color>#287D8EFF </color>
-  // <color>#238A8DFF </color>
-  // <color>#1F968BFF </color>
-  // <color>#20A387FF </color>
-  // <color>#29AF7FFF </color>
-  // <color>#3CBB75FF </color>
-  // <color>#55C667FF </color>
-  // <color>#73D055FF </color>
-  // <color>#95D840FF </color>
-  // <color>#B8DE29FF </color>
-  // <color>#DCE319FF </color>
-  // <color>#FDE725FF]
-        
+  let colorRange = ['#450256', '#450256', '#21908D', '#5AC865', '#F9E721']   // hexcodes for the heat map legend 
   let color = d3.scaleLinear().range(colorRange).domain([1, 2, 3, 4, 5]);
+
+  let linearGradient = lmsOuter.append("defs")
+    .append("linearGradient")
+    .attr("id", "linear-gradient");
+
+  linearGradient.append("stop")
+    .attr("offset", "0%")
+    .attr("stop-color", color(1));
+
+  linearGradient.append("stop")
+    .attr("offset", "25%")
+    .attr("stop-color", color(2));
+
+  linearGradient.append("stop")
+    .attr("offset", "50%")
+    .attr("stop-color", color(3));
+
+  linearGradient.append("stop")
+    .attr("offset", "75%")
+    .attr("stop-color", color(4));
+
+  linearGradient.append("stop")
+    .attr("offset", "100%")
+    .attr("stop-color", color(5)); 
+}
+
+  
 
 
   
