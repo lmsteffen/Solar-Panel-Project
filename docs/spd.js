@@ -1,6 +1,6 @@
-let margins = { top: 45, bottom: 45, left: 60, right: 45 };
-let outerWidth = 800;
-let outerHeight = 450;
+let margins = { top: 60, bottom: 45, left: 60, right: 60 };
+let outerWidth = 1000;
+let outerHeight = 562.5;
 let innerWidth = outerWidth - margins.left - margins.right;
 let innerHeight = outerHeight - margins.top - margins.bottom;
 
@@ -15,6 +15,7 @@ let flatData = []
 let months = [4, 5, 6, 7, 8, 9, 10, 11, 12]
 // let months = ['Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
 let hours = [5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21]
+let pointsList = []
 
 
 
@@ -61,16 +62,48 @@ function flatten(data) {
   drawHM(flatData)
 }
 
+let wattScale = d3
+  .scaleLinear() 
+  .domain( [0, 6012] ) //I know this is bad code, but it gets called in multiple .then() functions
+  .range([innerHeight, 0]);
+  let wattAxis = d3.axisLeft(wattScale)
+
+
+let timeScale = d3 //make sure you use timeClean()
+  .scaleLinear()
+  .domain( [0, 24] )
+  .range([0, innerWidth])
+  let timeAxis = d3.axisBottom(timeScale).ticks()//.tickValues()
+
 Promise.all([
 d3.csv('ordered-data.csv'),
 d3.csv('heatmap-data.csv')
 ]).then(function(data) {
-  draw(data[0])
+  setup(data[0])
   flatten(data[1])
+  updateLine(data[0])
 })
+
+function updateLine(solar) {
+
+  for (let i = 0; i < solar.length; i++) { //creates list of points to plot with line
+    pointsList.push([timeScale(timeClean(solar[i]['Time'])), wattScale(solar[i]['W'])])
+    }
+
+  let lineGen = d3.line()
+  let pathData = lineGen(pointsList)
+
+  adhInner //line
+    .append('path')
+    .attr('d', pathData)
+    .attr('stroke-width', .15)
+    .attr('stroke', 'yellow')
+    .attr('fill', 'transparent')
+    .attr('opacity', 1)
+}
   
   
-function draw(solar) {    
+function setup(solar) {    
 
   adhOuter //border
     .append("rect")
@@ -80,19 +113,6 @@ function draw(solar) {
     .attr("stroke", "#333333")
     .attr("stroke-width", 3);
   
-
-  let wattScale = d3
-    .scaleLinear() 
-    .domain( [Math.min(...solar.map(d => d.W)), Math.max(...solar.map(d => d.W))] )
-    .range([innerHeight, 0]);
-  let wattAxis = d3.axisLeft(wattScale)
-
-
-  let timeScale = d3 //make sure you use timeClean()
-    .scaleLinear()
-    .domain( [0000, 24] )
-    .range([0, innerWidth])
-  let timeAxis = d3.axisBottom(timeScale).ticks()//.tickValues()
 
     /* adhInner //points
       .selectAll('circle')
@@ -120,7 +140,7 @@ function draw(solar) {
     .append('text')
     .attr('class', 'x axis')
     .attr('x', margins.left + innerWidth / 2)
-    .attr('y', outerHeight - margins.bottom / 4)
+    .attr('y', outerHeight - margins.bottom / 2 + 12)
     .attr('text-anchor', 'middle')
     .text('Time of Day (in Hours)')
     .attr('fill', '#FFFFFF')
@@ -129,7 +149,7 @@ function draw(solar) {
     .append('text')
     .attr('class', 'y axis')
     .attr('x', margins.left / 2)
-    .attr('y', margins.bottom + innerHeight / 2.16)
+    .attr('y', margins.bottom + innerHeight / 2 - 12)
     .attr('text-anchor', 'middle')
     .attr(
       'transform',
@@ -138,24 +158,6 @@ function draw(solar) {
     .text('Watt-hours')
     .attr('fill', '#FFFFFF')
 
-  let pointsList = []
-
-  for (let i = 0; i < solar.length; i++) { //creates list of points to plot with line
-    pointsList.push([timeScale(timeClean(solar[i]['Time'])), wattScale(solar[i]['W'])])
-    }
-
-  let lineGen = d3.line()
-  let pathData = lineGen(pointsList)
-
-  adhInner //line
-    .append('path')
-    .attr('d', pathData)
-    .attr('stroke-width', .15)
-    .attr('stroke', 'yellow')
-    .attr('fill', 'transparent')
-    .attr('opacity', .9)
-
-   
 
 }
 
