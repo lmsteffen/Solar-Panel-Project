@@ -101,20 +101,20 @@ function updateLine(solar) {
     .attr('fill', 'transparent')
     .attr('opacity', 1)
 
-  let data = [0, 0.005, 0.01, 0.015, 0.02, 0.025];
 
   let sliderRange = d3
     .sliderBottom()
-    .min(d3.min(data))
-    .max(d3.max(data))
-    .width(300)
-    .tickFormat(d3.format('.2%'))
-    .ticks(5)
-    .default([0.015, 0.02])
-    .fill('#2196f3')
+    .min(0)
+    .max(286)
+    .width(286)
+    .ticks(0)
+    .default([0, 286])
+    .fill('yellow')
     .on('onchange', val => {
-      d3.select('p#value-range').text(val.map(d3.format('.2%')).join('-'));
+      let dateRange = [solar[Math.round(val[0])*96]['Date'], solar[Math.round(val[1])*96]['Date']]
+      d3.select('p#value-range').text(dateRange.join('-'));
     });
+
 
   let gRange = d3
     .select('div#slider-range')
@@ -127,10 +127,7 @@ function updateLine(solar) {
   gRange.call(sliderRange);
 
   d3.select('p#value-range').text(
-    sliderRange
-      .value()
-      .map(d3.format('.2%'))
-      .join('-')
+    ['4/11//19', '1/20/20'].join('-')
   );
 
 }
