@@ -213,12 +213,48 @@ function drawHM(data) {
     .data(data)
     .enter()
     .append('rect')
-    .attr('x', d => monthScale(d.month))  // ask about this too
+    .attr('x', d => monthScale(d.month)) 
     .attr('y', d => hourScale(d.hour))
     .attr('width', monthScale.bandwidth())
     .attr('height', hourScale.bandwidth())
     .style('stroke', '#FFFFFF')
     .style('fill', d => colorScale(d.W))
+    .style('fill-opacity', 1)
+    .style('stroke-opacity', .7)
+    .on('mouseover', darkenSquare)
+    // .on('mousemove', showWh)
+    // .on('mouseleave', function(d) {
+    //   hideWh()
+    //   lightenSquare(d, this)
+    // })
+
+  function darkenSquare(d) {
+    d3.select(this)
+      .style('fill-opacity', 0.5)
+      .style('stroke-opacity', 1)
+      .style('stroke', 'red')
+  }
+
+  // function showWh(d) {
+  //   let Wh = 'System Production (watt-hours): ' + d.W
+  //   let mouseLoc = d3.mouse(this)
+  //   d3.select('.tooltip')
+  //     .html(Wh)
+  //     .style('visibility', 'visible')
+  //     .style('left', mouseLoc[0] + marginsHM.left + monthScale.bandwidth() + 'px')
+  //     .style('top', mouseLoc[1] - hourScale.bandwidth() + 'px')
+  // }
+
+  // function lightenSquare(d, ref) {
+  //   d3.select(ref)
+  //   .style('fill-opacity', 1)
+  //   .style('stroke-opacity', .7)
+  // }
+
+  // function hideWh() {
+  //   d3.select('.tooltip')
+  //     .style('visibility', 'hidden')
+  // }
 
   lmsOuter 
     .append('text')  // x text
@@ -267,7 +303,6 @@ function drawHM(data) {
     .append('rect')
     .attr('x', marginsHM.left + 6 )
     .attr('y', marginsHM.top / 2)
-    // .attr('y', marginsHM.top)
     .attr('width', innerWidthHM / 1.86)
     .attr('height', hourScale.bandwidth())
     .attr('stroke', 'white')
