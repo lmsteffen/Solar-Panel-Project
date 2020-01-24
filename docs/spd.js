@@ -275,7 +275,7 @@ function drawHM(data) {
       .style('visibility', 'visible')
       // .style('left', mouseLoc[0] + 'px')
       // .style('top', mouseLoc[1] + outerHeight + outerHeightHM + 'px' )
-      .style('left', marginsHM.left + innerWidthHM / 3 + innerWidthHM + 'px' )
+      .style('left', marginsHM.left + innerWidthHM / 3 + innerWidt+hHM + 'px' )
       .style('top', outerHeight + outerHeightHM - marginsHM.top / 6  + 'px')
   }
 
@@ -368,7 +368,10 @@ function drawHM(data) {
   linearGradient.append("stop")
     .attr("offset", "100%")
     .attr("stop-color", color(5)); 
+
+
 }
+
 
 function darkenSquare(ref) {
   d3.select(ref)
