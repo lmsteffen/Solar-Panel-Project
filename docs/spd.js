@@ -263,20 +263,17 @@ function drawHM(data) {
       lightenSquare(d, this)
     })
 
-  
+    function darkenSquare(ref) {
+      d3.select(ref)
+        .style('stroke', 'red')
+    }
 
   function showWh(d, ref) {
     let Wh = 'System Production (watt-hours): ' + Math.floor(d.W)
     let mouseLoc = d3.mouse(ref)
-    // console.log(mouseLoc)
     d3.select('.tooltip')
-      .html(Wh)
-      
+      .html(Wh)      
       .style('visibility', 'visible')
-      // .style('left', mouseLoc[0] + 'px')
-      // .style('top', mouseLoc[1] + outerHeight + outerHeightHM + 'px' )
-      .style('left', marginsHM.left + innerWidthHM / 3 + innerWidt+hHM + 'px' )
-      .style('top', outerHeight + outerHeightHM - marginsHM.top / 6  + 'px')
   }
 
   function lightenSquare(d, ref) {
@@ -373,10 +370,7 @@ function drawHM(data) {
 }
 
 
-function darkenSquare(ref) {
-  d3.select(ref)
-    .style('stroke', 'red')
-}
+
 
   
 
