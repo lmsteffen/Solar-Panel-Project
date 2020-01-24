@@ -10,10 +10,11 @@ body {
   position: absolute;
   border: solid;
   border-width: 2px;
-  padding: '5px';
-  background-color: white;
+  padding: 10px 15px;
+  background-color: #222222;
   font-family: "Oswald";
-  color: #808080;
+  color: #cccccc;
+  visibility: hidden;
 }
 
 
